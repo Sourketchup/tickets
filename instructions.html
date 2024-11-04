@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instructions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+      .form-container {
+          padding: 20px;
+          border-radius: 10px;
+      }
+
+      .form-box {
+          padding: 20px;
+          background-color: #6c757d; /* Original box color */
+          border-radius: 10px;
+          margin-bottom: 20px; /* Increased space between instruction boxes */
+      }
+
+      .instruction-title {
+          text-decoration: underline;
+          margin-bottom: 20px;
+          color: #ffffff; /* Text color for titles */
+      }
+
+      .step-number {
+          font-weight: bold;
+      }
+
+      .step-instructions {
+          margin-bottom: 10px;
+          color: #ffffff; /* Text color for instructions */
+      }
+
+      .grid-container {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive columns */
+          gap: 20px; /* Space between boxes */
+      }
+
+      h2 {
+          text-align: center; /* Center the title */
+          margin-bottom: 30px; /* Space below the title */
+      }
+  </style>
+</head>
+<body class="bg-dark text-light" style="font-family: 'Poppins', sans-serif;">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">Homecoming Tickets</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Add Tickets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="search.html">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="edit.html">Edit Info</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="instructions.html">Instructions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="manual-add.html">Manually Add Ticket</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container form-container">
+    <h2>Instructions</h2>
+    <div class="grid-container">
+      <!-- Instruction Box 1 -->
+      <div class="form-box">
+        <div class="instruction-title">Adding a Student Ticket:</div>
+        <div class="step-instructions"><span class="step-number">1.</span> Go to the "Add Tickets - Student" page.</div>
+        <div class="step-instructions"><span class="step-number">2.</span> Enter the Student # and click "Verify Student".</div>
+        <div class="step-instructions"><span class="step-number">3.</span> Enter the Ticket # and submit.</div>
+      </div>
+
+      <!-- Instruction Box 2 -->
+      <div class="form-box">
+        <div class="instruction-title">Adding a Guest Ticket:</div>
+        <div class="step-instructions"><span class="step-number">1.</span> Go to the "Add Tickets - Guest" page.</div>
+        <div class="step-instructions"><span class="step-number">2.</span> Enter the First and Last name of the Guest.</div>
+        <div class="step-instructions"><span class="step-number">3.</span> Enter the Student # of the student that invited them.</div>
+        <div class="step-instructions"><span class="step-number">4.</span> Enter the Ticket # and submit.</div>
+      </div>
+
+      <!-- Instruction Box 3 -->
+      <div class="form-box">
+        <div class="instruction-title">Searching for Tickets:</div>
+        <div class="step-instructions"><span class="step-number">1.</span> Go to the "Search" page.</div>
+        <div class="step-instructions"><span class="step-number">2.</span> Enter either the Student # or Ticket #.</div>
+        <div class="step-instructions"><span class="step-number">3.</span> Submit to view the ticket details.</div>
+      </div>
+
+      <!-- Instruction Box 4 -->
+      <div class="form-box">
+        <div class="instruction-title">Editing Tickets:</div>
+        <div class="step-instructions"><span class="step-number">1.</span> Go to the "Edit Info" page.</div>
+        <div class="step-instructions"><span class="step-number">2.</span> Enter the Ticket # you wish to edit and click Search.</div>
+        <div class="step-instructions"><span class="step-number">3.</span> You may now edit any associated information.</div>
+        <div class="step-instructions"><span class="step-number">4.</span> Once you are finished, click Update Ticket.</div>
+      </div>
+
+      <!-- Instruction Box 4 -->
+      <div class="form-box">
+        <div class="instruction-title">*Manually Adding Tickets:</div>
+        <div class="step-instructions"><span class="step-number">NOTE:</span> This <b> bypasses </b> the payment list. This is to be used under special circumstances.</div>
+        <div class="step-instructions"><span class="step-number">2.</span> Enter the Ticket #, Student Name, and Student #.</div>
+        <div class="step-instructions"><span class="step-number">3.</span> Click "Add Ticket".</div>
+      </div>
+
+      <!-- Instruction Box 5 -->
+      <div class="form-box">
+        <div class="instruction-title">Editing Tickets:</div>
+        <div class="step-instructions"><span class="step-number">1.</span> Go to the "Edit Info" page.</div>
+        <div class="step-instructions"><span class="step-number">2.</span> Enter the Ticket # you wish to edit and click Search.</div>
+        <div class="step-instructions"><span class="step-number">3.</span> You may now edit any associated information.</div>
+        <div class="step-instructions"><span class="step-number">4.</span> Once you are finished, click Update Ticket.</div>
+      </div>
+
+      <!-- Add more instruction boxes here by copying and pasting the block above -->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

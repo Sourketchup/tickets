@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Information</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .form-box {
+      padding: 20px;
+      background-color: #495864;
+      border-radius: 10px;
+      width: 100%;
+    }
+
+    @media (min-width: 992px) {
+      .form-container {
+        display: flex;
+        justify-content: center;
+      }
+      .form-box {
+        width: 45%;
+        margin: 0 10px;
+      }
+    }
+
+    .modal-content {
+      background-color: #343a40;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body class="bg-dark text-light" style="font-family: 'Poppins', sans-serif;">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">Homecoming Tickets</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Add Tickets</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="search.html">Search</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="edit.html">Edit Info</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="instructions.html">Instructions</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="manual-add.html">Manually Add Ticket</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Form Section -->
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">Edit Ticket Information</h2>
+    <div class="form-container">
+      <div class="form-box">
+        <h4>Search Ticket to Edit</h4>
+        <form id="editSearchForm">
+          <!-- Search by Ticket # -->
+          <div class="mb-3">
+            <label for="ticketSearch" class="form-label">Ticket #:</label>
+            <input type="text" class="form-control" id="ticketSearch" required>
+          </div>
+          <button type="submit" class="btn btn-info w-100">Search</button>
+        </form>
+      </div>
+
+      <div class="form-box">
+        <h4>Update Ticket Information</h4>
+        <!-- Editable Ticket Information -->
+        <form id="editForm">
+          <div class="mb-3">
+            <label for="ticketType" class="form-label">Ticket Type:</label>
+            <select class="form-control" id="ticketType" required>
+              <option value="Student">Student</option>
+              <option value="Guest">Guest</option>
+            </select>
+          </div>        
+          <div class="mb-3">
+            <label for="studentName" class="form-label">Student Name:</label>
+            <input type="text" class="form-control" id="studentName" required>
+          </div>
+          <div class="mb-3">
+            <label for="ticketNumber" class="form-label">Grade Level:</label>
+            <input type="text" class="form-control" id="ticketNumber" required>
+          </div>
+          <div class="mb-3">
+            <label for="ticketNumber" class="form-label">Inviter:</label>
+            <input type="text" class="form-control" id="ticketNumber" required>
+          </div>
+          <div class="mb-3">
+            <label for="ticketNumber" class="form-label">Ticket #:</label>
+            <input type="text" class="form-control" id="ticketNumber" required>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Update Ticket</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Error</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">No matching records found.</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

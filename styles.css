@@ -1,0 +1,46 @@
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  h2 {
+    color: #ffffff;
+  }
+  
+  label {
+    font-weight: 600;
+    color: #ffffff;
+  }
+  
+  input, select, button {
+    background-color: #1f1f1f;
+    border: 1px solid #444;
+    color: #ffffff;
+  }
+  
+  .navbar {
+    background-color: #007bff;
+  }
+  
+  .nav-link {
+    color: #ffffff !important;
+  }
+  
+  .btn-primary {
+    background-color: #0069d9;
+    border-color: #0062cc;
+  }
+  
+  .btn-primary:hover {
+    background-color: #005cbf;
+    border-color: #0052a3;
+  }
+  
+  input, button {
+    transition: background-color 0.3s ease;
+  }
+  
+  input:focus, button:hover {
+    background-color: #333;
+  }
