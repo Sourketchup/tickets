@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const lastname = data.StudentLastName.toLowerCase();
             const name = `${firstname} ${lastname}`.toUpperCase();
 
-            const response = await fetch(`https://proxy.wyzie.ru/https://tickets.sourketchup.workers.dev/tickets/add`, {
+            const response = await fetch(`https://tickets.sourketchup.workers.dev/tickets/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     async function addGuestTicket(ticketNumber, data) {
         try {
-            const response = await fetch(`https://proxy.wyzie.ru/https://tickets.sourketchup.workers.dev/tickets/add`, {
+            const response = await fetch(`https://tickets.sourketchup.workers.dev/tickets/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
