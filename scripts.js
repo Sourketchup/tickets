@@ -2,18 +2,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownItems = document.querySelectorAll('.dropdown-item');
     const studentSubmission = document.getElementById('StudentSubmission');
     const guestSubmission = document.getElementById('GuestSubmission');
-    const tickettypealert = document.getElementById('tickettypealert');
     const verifyStudentButton = document.getElementById('verifyStudentButton');
     const ticketbox = document.getElementById('ticket-box');
     const studentNumberInput = document.getElementById('studentNumber');
     const studentheader = document.getElementById('studentheader');
     const ticketnumberInput = document.getElementById('studentticketNumber');
+    const studentnumberlabel = document.getElementById('studentNumberLabel');
     const ticketsubmit = document.getElementById('ticketSubmit');
     let data
+    const notyf = new Notyf({
+        types: [
+          {
+            type: 'info',
+            background: '#0c4eb1',
+            icon: true
+          }
+        ,{
+            type: 'error',
+            background: '#b10c0c',
+            icon: true
+          }
+        ]
+      });
     
     async function handleStudentForm() {
         const studentNumberInput = document.getElementById('studentNumber');
-        
         try {
             const response = await fetch(`https://tickets.sourketchup.workers.dev/students/${studentNumberInput.value}`, {
                 method: 'GET',
@@ -21,33 +34,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 if (response.status === 404) {
-                    alert('Student not found.');
+                    notyf.open({
+                        type: 'error',
+                        message: 'Student not found!',
+                        icon: '<i class="fas fa-times-circle"></i>'
+                    })
                     return;
-                } 
-                throw new Error(`HTTP error! status: ${response.status}`);
+                } else {
+                    notyf.open({
+                        type: 'error',
+                        message: 'Something went wrong!',
+                        icon: '<i class="fas fa-times-circle"></i>'
+                    });
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
             }
+
+            notyf.open({
+            type: 'info',
+            message: 'Student found!',
+            icon: '<i class="fas fa-check-circle"></i>'
+            });
 
             verifyStudentButton.style.display = 'none';
             studentNumberInput.style.display = 'none';
             studentheader.style.display = 'none';
+            studentnumberlabel.style.display = 'none';
             data = await response.json(); // Await here to get the parsed JSON data
             const studentName = document.createElement('h2');
             studentName.id ='studentName';
             studentName.textContent = `${data.StudentFirstName} ${data.StudentLastName}`;
+            studentheader.textContent = `Ticket for ${data.StudentFirstName} ${data.StudentLastName}`;
+            studentheader.style.display = 'block';
             
-            const homeroomTeacher = document.createElement('p');
-            homeroomTeacher.id = 'homeroomTeacher';
-            homeroomTeacher.textContent = `Homeroom Teacher: ${data.HomeroomTeacher}`;
-            
-            const gradeLevel = document.createElement('p');
-            gradeLevel.id = 'gradeLevel';
-            gradeLevel.textContent = `Grade Level: ${data.GradeLevel}`;
-    
             // Append the elements to the studentSubmission box
-            studentSubmission.appendChild(studentName);
-            studentSubmission.appendChild(homeroomTeacher);
-            studentSubmission.appendChild(gradeLevel);
-    
             // Show the ticket box
             ticketbox.style.display = 'block';
             ticketsubmit.addEventListener('click', function(event) {
@@ -78,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     Ticket_Type: "Student",   // e.g., "Guest" or "Student"
                     Inviter: "NONE",          // The StudentID or GuestID
                     Owner: name,              // The name or ID of the owner
-                    GradeLevel: data.GradeLevel           // Pass null if no grade level is needed
                 }),
             });
     
@@ -100,11 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             studentheader.style.display = 'block';
             ticketbox.style.display = 'none';
             const studentName = document.getElementById('studentName');
-            const homeroomTeacher = document.getElementById('homeroomTeacher');
-            const gradeLevel = document.getElementById('gradeLevel');
             studentName.remove();
-            homeroomTeacher.remove();
-            gradeLevel.remove();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -165,34 +180,28 @@ document.addEventListener('DOMContentLoaded', () => {
     dropdownItems.forEach(item => {
         item.addEventListener('click', function(event) {
             event.preventDefault(); // Prevent default anchor behavior
-            tickettypealert.style.display = 'none'; // Hide the alert message
             const selectedValue = this.getAttribute('data-value'); // Get the value of the selected item
             if (selectedValue === 'Student') {
                 const studentName = document.getElementById('studentName');
-                const homeroomTeacher = document.getElementById('homeroomTeacher');
-                const gradeLevel = document.getElementById('gradeLevel');
                 if (studentName) {
                     studentName.remove();
-                    homeroomTeacher.remove();
-                    gradeLevel.remove();
                 }
                 studentSubmission.style.display = 'block';
                 guestSubmission.style.display = 'none';
                 verifyStudentButton.style.display = 'block';
+                studentheader.textContent = 'Student Information';
                 studentNumberInput.style.display = 'block';
                 studentheader.style.display = 'block';
                 ticketbox.style.display = 'none';
+                
 
             } else if (selectedValue === 'Guest') {
                 const studentName = document.getElementById('studentName');
-                const homeroomTeacher = document.getElementById('homeroomTeacher');
-                const gradeLevel = document.getElementById('gradeLevel');
                 if (studentName) {
                     studentName.remove();
-                    homeroomTeacher.remove();
-                    gradeLevel.remove();
                 }
                 studentSubmission.style.display = 'none';
+                studentheader.textContent = 'Guest Information';
                 ticketbox.style.display = 'none';
                 guestSubmission.style.display = 'block';
             }
@@ -202,7 +211,22 @@ document.addEventListener('DOMContentLoaded', () => {
     verifyStudentButton.addEventListener('click', function(event) {
         event.preventDefault();
         if (!studentNumberInput.value) {
-            alert('Please enter a student number.');
+            notyf.open({
+                type: 'error',
+                message: 'Please enter a student number.',
+                icon: '<i class="fas fa-times-circle"></i>'
+
+            });
+            return;
+        }
+        // check if its an integer
+        if (isNaN(studentNumberInput.value)) {
+            notyf.open({
+                type: 'error',
+                message: 'Please enter a valid student number.',
+                icon: '<i class="fas fa-times-circle"></i>'
+
+            });
             return;
         }
         handleStudentForm();
