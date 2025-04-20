@@ -47,6 +47,11 @@ $(document).ready(function() {
           });
           return;
         }
+        notyf.open({
+          type: 'info',
+          message: 'Ticket found!',
+          icon: '<i class="fas fa-check-circle"></i>'
+        });
   
         const data = await response.json();
         const studentFields = document.getElementById('studentFields');
