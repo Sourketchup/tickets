@@ -28,8 +28,12 @@
     }
 
     .nav-link.active {
-      text-decoration: underline;
+      text-decoration: none;
+      border-bottom: 2px solid #ffffff;
+      transition: border-color 0.3s ease-in-out;
+      padding: 0.5em 0;
     }
+
 
     .form-box {
       background-color: #161b22;
@@ -169,6 +173,10 @@
           <div class="mb-3">
             <label for="inviterID" class="form-label">Inviter Student Number:</label>
             <input type="text" class="form-control" id="inviterID" required>
+          </div>
+          <div class="mb-3">
+            <label for="gradeLevel" class="form-label">Grade Level:</label>
+            <input type="text" class="form-control" id="gradeLevel" required>
           </div>
           <div class="mb-3">
             <label for="ticketNumber" class="form-label">Ticket Number:</label>

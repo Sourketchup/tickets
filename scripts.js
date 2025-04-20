@@ -97,19 +97,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     ID: ticketNumber,          // Assuming ticketNumber is the ID
                     Ticket_Type: "Student",   // e.g., "Guest" or "Student"
                     Inviter: "NONE",          // The StudentID or GuestID
-                    Owner: name,              // The name or ID of the owner
+                    Owner: name,            // The name or ID of the owner
+                    GradeLevel: null
                 }),
             });
     
             if (!response.ok) {
+                const errorData = await response.json();
                 if (response.status === 403) {
-                    alert('A ticket with this ID already exists. Please use a different ID.');
+                    notyf.open({
+                        type: 'error',
+                        message: errorData.error,
+                        icon: '<i class="fas fa-times-circle"></i>'
+                    });
                     return;
                 } 
-                const errorData = await response.json();
                 throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorData.error}`);
             }
-    
             const responsedata = await response.json();
             alert(`Ticket ${ticketNumber} added successfully!`);
             studentSubmission.style.display = 'block';
@@ -118,8 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
             studentNumberInput.style.display = 'block';
             studentheader.style.display = 'block';
             ticketbox.style.display = 'none';
-            const studentName = document.getElementById('studentName');
-            studentName.remove();
         } catch (error) {
             console.error('Error:', error);
         }
@@ -130,11 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const inviterID = document.getElementById('inviterID').value;
         const ticketNumber = document.getElementById('ticketNumber').value;
         const name = `${firstname} ${lastname}`.toUpperCase();
+        const gradeLevel = document.getElementById('gradeLevel').value || null;
         if (!firstname ||!lastname ||!inviterID ||!ticketNumber) {
             alert('Please fill in all required fields.');
             return;
         }
-        const data = {firstname, lastname, inviterID, ticketNumber, name};
+        const data = {firstname, lastname, inviterID, ticketNumber, name, gradeLevel};
         await addGuestTicket(ticketNumber, data);
         
     }
@@ -150,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     Ticket_Type: "Guest",   // e.g., "Guest" or "Student"
                     Inviter: data.inviterID,          // The StudentID or GuestID
                     Owner: data.name,              // The name or ID of the owner
-                    GradeLevel: null           // Pass null if no grade level is needed
+                    GradeLevel: data.gradeLevel || null           // Pass null if no grade level is needed
                 }),
             });
         
@@ -168,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const lastnamei = document.getElementById('lastName');
             const inviterIDi = document.getElementById('inviterID');
             const ticketNumberi = document.getElementById('ticketNumber');
+            const gradeleveli = document.getElementById('gradeLevel');
+            gradeleveli.value = '';
             firstnamei.value = '';
             lastnamei.value = '';
             inviterIDi.value = '';
