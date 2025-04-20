@@ -131,8 +131,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const lastname = document.getElementById('lastName').value;
         const inviterID = document.getElementById('inviterID').value;
         const ticketNumber = document.getElementById('ticketNumber').value;
+        const response = await fetch(`https://tickets.sourketchup.workers.dev/students/${inviterID}`, {
+            method: 'GET',
+        });
+        if (!response.ok) {
+            if (response.status === 404) {
+                notyf.open({
+                    type: 'error',
+                    message: 'Student not found with this ID.',
+                    icon: '<i class="fas fa-times-circle"></i>'
+                });
+                return;
+            }
+        }
+        
         const name = `${firstname} ${lastname}`.toUpperCase();
-        const gradeLevel = document.getElementById('gradeLevel').value || null;
+        const gradeLevel = document.getElementById('gradeLevel').value
         if (!firstname ||!lastname ||!inviterID ||!ticketNumber) {
             alert('Please fill in all required fields.');
             return;
