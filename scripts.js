@@ -77,6 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 addStudentTicket(ticketnumberInput.value, data);
+                
+                //remove the event listener after the first click
+                ticketsubmit.removeEventListener('click', arguments.callee);
+
             });
         } catch (error) {
             console.error('Fetch error:', error);
