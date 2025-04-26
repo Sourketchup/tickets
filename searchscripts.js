@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     SearchButton.addEventListener('click', async (event) => {
         event.preventDefault();
+        const checkinButton = document.getElementById('checkinButton');
+
+        checkinButton.textContent = 'Check In'; // Reset button text
+        checkinButton.disabled = false; // Enable the button
 
         const response = await fetch(`https://tickets.sourketchup.workers.dev/tickets/search/${TicketID.value}`);
         const data = await response.json();
@@ -48,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const studentNameEl = document.getElementById('studentNameResult');
         const gradeLevelEl = document.getElementById('gradeLevelResult');
         const timeAddedEl = document.getElementById('timeAddedResult');
-        const checkinButton = document.getElementById('checkinButton');
 
         if (!ticketTypeEl || !studentNameEl || !gradeLevelEl || !timeAddedEl) return;
 
