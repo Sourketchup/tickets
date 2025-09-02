@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Search Tickets</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
   <style>
     body {
@@ -22,7 +23,8 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .navbar-brand, .nav-link {
+    .navbar-brand,
+    .nav-link {
       color: #ffffff !important;
       font-weight: 500;
     }
@@ -39,7 +41,7 @@
       background-color: #161b22;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
       margin-bottom: 2em;
     }
 
@@ -79,55 +81,123 @@
       margin-top: 20px;
     }
 
-    h2, h5 {
+    h2,
+    h5 {
       color: #c9d1d9;
     }
   </style>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="index.html"><i class="fa-solid fa-ticket"></i> Prom Tickets</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa-solid fa-plus"></i> Add Tickets</a></li>
-        <li class="nav-item"><a class="nav-link active" href="search.html"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
-        <li class="nav-item"><a class="nav-link" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Info</a></li>
-        <li class="nav-item"><a class="nav-link" href="instructions.html"><i class="fa-solid fa-info-circle"></i> Instructions</a></li>
-        <li class="nav-item"><a class="nav-link" href="manual-add.html"><i class="fa-solid fa-keyboard"></i> Manual Add</a></li>
-      </ul>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html"><i class="fa-solid fa-ticket"></i> Prom Tickets</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa-solid fa-plus"></i> Add Tickets</a>
+          </li>
+          <li class="nav-item"><a class="nav-link active" href="search.html"><i
+                class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Info</a></li>
+          <li class="nav-item"><a class="nav-link" href="instructions.html"><i class="fa-solid fa-info-circle"></i>
+              Instructions</a></li>
+          <li class="nav-item"><a class="nav-link" href="manual-add.html"><i class="fa-solid fa-keyboard"></i> Manual
+              Add</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="form-box">
+      <form id="searchForm">
+        <div class="mb-3 d-flex align-items-center">
+          <div class="flex-grow-1 me-2">
+            <label for="TicketID" class="form-label">Ticket #</label>
+            <input type="text" class="form-control" id="TicketID" required>
+          </div>
+          <button type="button" id="scanButton" class="btn btn-custom-blue mt-4">
+            <i class="fa-solid fa-camera"></i>
+          </button>
+        </div>
+        <div id="qrScanner" style="display:none; margin-top:1em;"></div>
+        <button type="submit" id="SearchButton" class="btn btn-custom-blue w-100">Search</button>
+      </form>
+    </div>
+
+    <div class="ticket-box" id="searchResults" style="display: none;">
+      <h5><i class="fa-solid fa-ticket"></i> Results</h5>
+      <p>Ticket Type: <span id="ticketTypeResult"></span></p>
+      <p>Ticket Owner: <span id="studentNameResult"></span></p>
+      <p><span id="gradeLevelResult"></span></p>
+      <p>Time Added: <span id="timeAddedResult"></span></p>
+      <button id="checkinButton" class="btn btn-custom-blue"></button>
     </div>
   </div>
-</nav>
+  <script>
+    const scanButton = document.getElementById("scanButton");
+    const qrScanner = document.getElementById("qrScanner");
+    let html5QrCode;
 
-<div class="container mt-5">
-  <div class="form-box">
-    <form id="searchForm">
-      <div class="mb-3">
-        <label for="TicketID" class="form-label">Ticket #</label>
-        <input type="text" class="form-control" id="TicketID" required>
-      </div>
-      <button type="submit" id="SearchButton" class="btn btn-custom-blue w-100">Search</button>
-    </form>
-  </div>
+    function getQrBoxConfig() {
+      const size = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.6);
+      return { width: size, height: size };
+    }
 
-  <div class="ticket-box" id="searchResults" style="display: none;">
-    <h5><i class="fa-solid fa-ticket"></i> Results</h5>
-    <p>Ticket Type: <span id="ticketTypeResult"></span></p>
-    <p>Ticket Owner: <span id="studentNameResult"></span></p>
-    <p><span id="gradeLevelResult"></span></p>
-    <p>Time Added: <span id="timeAddedResult"></span></p>
-    <button id="checkinButton" class="btn btn-custom-blue"></button>
-  </div>
-</div>
+    let currentQrBoxConfig = getQrBoxConfig();
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-<script src="searchscripts.js"></script>
+    window.addEventListener("resize", () => {
+      currentQrBoxConfig = getQrBoxConfig();
+    });
 
+    scanButton.addEventListener("click", () => {
+      if (qrScanner.style.display === "none") {
+        qrScanner.style.display = "block";
+
+        if (!html5QrCode) {
+          html5QrCode = new Html5Qrcode("qrScanner");
+        }
+
+        html5QrCode.start(
+          { facingMode: "environment" }, // only facingMode, not width/height
+          {
+            fps: 15,
+            qrbox: () => currentQrBoxConfig,
+            formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128],
+            experimentalFeatures: { useBarCodeDetectorIfSupported: true }
+          },
+          (decodedText) => {
+            document.getElementById("TicketID").value = decodedText;
+            html5QrCode.stop().then(() => {
+              qrScanner.style.display = "none";
+            });
+          },
+          (errorMessage) => {
+            // ignore scanning errors
+          }
+        ).catch(err => {
+          console.error("Camera start failed", err);
+        });
+
+
+      } else {
+        html5QrCode.stop().then(() => {
+          qrScanner.style.display = "none";
+        });
+      }
+    });
+  </script>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="searchscripts.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </body>
+
 </html>
