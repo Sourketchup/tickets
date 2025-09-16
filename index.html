@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Tickets - Student & Guest</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
   <style>
     body {
@@ -22,7 +23,8 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .navbar-brand, .nav-link {
+    .navbar-brand,
+    .nav-link {
       color: #ffffff !important;
       font-weight: 500;
     }
@@ -39,7 +41,7 @@
       background-color: #161b22;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
       margin-bottom: 2em;
     }
 
@@ -66,7 +68,8 @@
       border: none;
     }
 
-    .btn-success:hover, .btn-primary:hover {
+    .btn-success:hover,
+    .btn-primary:hover {
       filter: brightness(1.1);
     }
 
@@ -84,7 +87,8 @@
       color: #ffffff;
     }
 
-    .ticket-box, .info-box {
+    .ticket-box,
+    .info-box {
       background-color: #161b22;
       border: 1px solid #30363d;
       border-radius: 10px;
@@ -93,16 +97,17 @@
     }
 
     .btn-custom-blue {
-    background-color: #1f6feb;
-    color: white;
-    border: none;
-  }
+      background-color: #1f6feb;
+      color: white;
+      border: none;
+    }
 
-  .btn-custom-blue:hover {
-    background-color: #0c4eb1;
-  }
+    .btn-custom-blue:hover {
+      background-color: #0c4eb1;
+    }
 
-    h2, h4 {
+    h2,
+    h4 {
       color: #c9d1d9;
     }
 
@@ -114,34 +119,68 @@
       }
 
     }
+
+    #qrScanner {
+      width: clamp(300px, 75%, 600px);
+      max-width: 50rem;
+      align-self: center;
+      height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    #guestQrScanner {
+      width: clamp(300px, 75%, 600px);
+      max-width: 50rem;
+      align-self: center;
+      height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
   </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "@scandit/web-datacapture-core": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-core@7.3.0/build/js/index.js",
+        "@scandit/web-datacapture-barcode": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-barcode@7.3.0/build/js/index.js",
+        "@scandit/web-datacapture-barcode/": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-barcode@7.3.0/",
+        "@scandit/web-datacapture-core/": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-core@7.3.0/"
+      }
+    }
+  </script>
 </head>
+
 <body>
 
-<nav class="navbar navbar-expand-lg">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="index.html"><i class="fa-solid fa-ticket"></i> Homecoming Tickets</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa-solid fa-plus"></i> Add Tickets</a></li>
-        <li class="nav-item"><a class="nav-link" href="search.html"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
-        <li class="nav-item"><a class="nav-link" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Info</a></li>
-        <li class="nav-item"><a class="nav-link" href="instructions.html"><i class="fa-solid fa-info-circle"></i> Instructions</a></li>
-        <li class="nav-item"><a class="nav-link" href="manual-add.html"><i class="fa-solid fa-keyboard"></i> Manual Add</a></li>
-      </ul>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html"><i class="fa-solid fa-ticket"></i> Homecoming Tickets</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fa-solid fa-plus"></i> Add
+              Tickets</a></li>
+          <li class="nav-item"><a class="nav-link" href="search.html"><i class="fa-solid fa-magnifying-glass"></i>
+              Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Info</a></li>
+          <li class="nav-item"><a class="nav-link" href="instructions.html"><i class="fa-solid fa-info-circle"></i>
+              Instructions</a></li>
+          <li class="nav-item"><a class="nav-link" href="manual-add.html"><i class="fa-solid fa-keyboard"></i> Manual
+              Add</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<div class="container mt-5">
-  <div class="form-box">
+  <div class="container mt-5">
+    <div class="form-box">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 id="studentheader">Please select a ticket type.</h4>
         <div class="dropdown">
-          <button class="btn btn-custom-blue dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+          <button class="btn btn-custom-blue dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown">
             Ticket Types
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -178,49 +217,100 @@
             <label for="gradeLevel" class="form-label">Grade Level:</label>
             <input type="text" class="form-control" id="gradeLevel" required>
           </div>
-          <div class="mb-3">
-            <label for="ticketNumber" class="form-label">Ticket Number:</label>
-            <input type="text" class="form-control" id="ticketNumber" required>
+          <div class="d-flex gap-2 mb-2 align-items-end">
+            <div class="flex-grow-1 mb-0">
+              <label for="ticketNumber" class="form-label">Ticket Number:</label>
+              <input type="text" class="form-control" id="ticketNumber" required>
+            </div>
+            <button type="button" id="guestScanButton" class="btn btn-custom-blue"
+              style="height: 38px; align-self: flex-end;">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
+
+          <div class="d-flex justify-content-center mb-3" style="max-height: 500px;">
+            <div id="guestQrScanner" style="display:none; width: 100%; height: 300px; margin-top:1em;"></div>
           </div>
           <button type="submit" id="guestticketSubmit" class="btn btn-custom-blue w-100">Add Ticket</button>
         </div>
       </form>
 
-    <div class="ticket-box" id="ticket-box" style="display: none;">
-      <h4>Ticket Information</h4>
-      <form>
-        <div class="mb-3">
-          <label for="studentticketNumber" class="form-label">Ticket #:</label>
-          <input type="text" class="form-control" id="studentticketNumber" required>
-        </div>
-        <button type="submit" id="ticketSubmit" class="btn btn-custom-blue w-100">Add Ticket</button>
-      </form>
+      <div class="ticket-box" id="ticket-box" style="display: none;">
+        <h4>Ticket Information</h4>
+        <form>
+          <div class="mb-3">
+            <label for="studentticketNumber" class="form-label">Ticket #:</label>
+            <div class="d-flex gap-2 mb-2">
+              <input type="text" class="form-control" id="studentticketNumber" required>
+              <button type="button" id="scanButton" class="btn btn-custom-blue">
+                <i class="fa-solid fa-camera"></i>
+              </button>
+            </div>
+            <div class="d-flex justify-content-center mb-3" style="max-height: 500px;">
+              <div id="qrScanner" style="display:none; width: 100%; height: 300px; margin-top:1em;"></div>
+            </div>
+          </div>
+          <button type="submit" id="ticketSubmit" class="btn btn-custom-blue w-100">Add Ticket</button>
+        </form>
+      </div>
+
     </div>
   </div>
-</div>
 
-<script>
-  document.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', function (e) {
-      e.preventDefault()
-      const selected = this.getAttribute('data-value')
-      document.getElementById('dropdownMenuButton').textContent = selected
+  <script>
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+      item.addEventListener('click', function (e) {
+        e.preventDefault()
+        const selected = this.getAttribute('data-value')
+        document.getElementById('dropdownMenuButton').textContent = selected
 
-      if (selected === 'Student') {
-        document.getElementById('StudentSubmission').style.display = 'block'
-        document.getElementById('GuestSubmission').style.display = 'none'
-      } else {
-        document.getElementById('StudentSubmission').style.display = 'none'
-        document.getElementById('GuestSubmission').style.display = 'block'
-      }
+        if (selected === 'Student') {
+          document.getElementById('StudentSubmission').style.display = 'block'
+          document.getElementById('GuestSubmission').style.display = 'none'
+        } else {
+          document.getElementById('StudentSubmission').style.display = 'none'
+          document.getElementById('GuestSubmission').style.display = 'block'
+        }
+      })
     })
-  })
-</script>
+  </script>
+  <script type="module">
+    import { Scanner } from "./scanner.js";
+    import { Symbology } from "@scandit/web-datacapture-barcode";
+    const scanButton = document.getElementById("scanButton");
+    const qrScanner = document.getElementById("qrScanner");
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-<script src="/scripts.js"></script>
+    const scanner = new Scanner({
+      element: qrScanner,
+      licenseKey: "Apq207mBLf1mFnaCsc0YutUjhV8fE696PBrsRXzrvP3BXtFq/2W1hElR0u4XX6zF2AIV5hpSAOwEED4h3EAUrzpb2rdmdoYs1wXX1YZh953VX2pzwnN271QuyMN3QeMRn0jUvzFi6vU5GQGfvEgKUsJuV5niVvDebUsJ9lseowzTDdWcDR2dXRMrI1q2GabWkSW+1hbREH5WTNuI+h9utA2HwGdhJVzIm7LXYy0xoi4BtBUXd9V4S5VQP2JB/vl/ovUeR7xjyeLym4gaQf0lfKWA+0xRx8S+DeHs6d8wTnZ5Y/BAAKgLY6S8VUQSj24CvHfYHvhPy2D+bc8uvd68tmWIEm1uDipPJgpBcqzZM+92kXD3qtOFOam76aO1D8PiTTbKvHL2ohUhzte8lMPXs9LoisS4rvPLK41fIQufkE0fwSHFQ63ihhESYfbZ+yvBlQac7atPXhYsstQYhWlbJ7fO5RVcXpg0H9/i+a8CrvEk7XVFe6uLxs24MdcBp1NLXqR9BryxtRj/azyRiORdckw22LcdcbPlgyKiFhu6BVX2xHS+gB7vJkuHeaH4FLRg0BUyATgu+kn2qhVHjuqctihBdmHtPnSw3WFj0dMTJRJE0bio8rAT1zC3q+3qYpcxx7/WGR8QFgOClfGUCsO7xrhb77lxf9cMsn3J8pFaVDBQNNQgSKKDfSrM5b9DndXIGzBUYZE62bNxKF80I5IBibtORcc+OxOp1eNfwkPRy1hCrabzt6a++1A56yTQuV06ahJGr2VovZ+N5gAsKtt9fSfyOfmubPq0wnXEnZSSFaIraUe8OOVaawjGMfOWnzQM6uAH2xC0ibRzr9ghDWK9YsVJv+/0C8tHKNXuGcSD//c=",
+      symbologies: [Symbology.Code128, Symbology.QR],
+      onScan: (data) => {
+        document.getElementById("studentticketNumber").value = data;
+      }
+    });
+
+    scanButton.addEventListener("click", () => scanner.init());
+  </script>
+
+  <script type="module">
+    import { Scanner } from "./scanner.js";
+    import { Symbology } from "@scandit/web-datacapture-barcode";
+
+    const guestScanner = new Scanner({
+      element: document.getElementById("guestQrScanner"),
+      licenseKey: "Apq207mBLf1mFnaCsc0YutUjhV8fE696PBrsRXzrvP3BXtFq/2W1hElR0u4XX6zF2AIV5hpSAOwEED4h3EAUrzpb2rdmdoYs1wXX1YZh953VX2pzwnN271QuyMN3QeMRn0jUvzFi6vU5GQGfvEgKUsJuV5niVvDebUsJ9lseowzTDdWcDR2dXRMrI1q2GabWkSW+1hbREH5WTNuI+h9utA2HwGdhJVzIm7LXYy0xoi4BtBUXd9V4S5VQP2JB/vl/ovUeR7xjyeLym4gaQf0lfKWA+0xRx8S+DeHs6d8wTnZ5Y/BAAKgLY6S8VUQSj24CvHfYHvhPy2D+bc8uvd68tmWIEm1uDipPJgpBcqzZM+92kXD3qtOFOam76aO1D8PiTTbKvHL2ohUhzte8lMPXs9LoisS4rvPLK41fIQufkE0fwSHFQ63ihhESYfbZ+yvBlQac7atPXhYsstQYhWlbJ7fO5RVcXpg0H9/i+a8CrvEk7XVFe6uLxs24MdcBp1NLXqR9BryxtRj/azyRiORdckw22LcdcbPlgyKiFhu6BVX2xHS+gB7vJkuHeaH4FLRg0BUyATgu+kn2qhVHjuqctihBdmHtPnSw3WFj0dMTJRJE0bio8rAT1zC3q+3qYpcxx7/WGR8QFgOClfGUCsO7xrhb77lxf9cMsn3J8pFaVDBQNNQgSKKDfSrM5b9DndXIGzBUYZE62bNxKF80I5IBibtORcc+OxOp1eNfwkPRy1hCrabzt6a++1A56yTQuV06ahJGr2VovZ+N5gAsKtt9fSfyOfmubPq0wnXEnZSSFaIraUe8OOVaawjGMfOWnzQM6uAH2xC0ibRzr9ghDWK9YsVJv+/0C8tHKNXuGcSD//c=",
+      symbologies: [Symbology.Code128, Symbology.QR],
+      onScan: (data) => {
+        document.getElementById("guestTicketNumber").value = data;
+      }
+    });
+
+    document.getElementById("guestScanButton").addEventListener("click", () => guestScanner.init());
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="/scripts.js"></script>
 
 </body>
-</html>
 
+</html>

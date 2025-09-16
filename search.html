@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Tickets</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -32,10 +32,8 @@
     .nav-link.active {
       text-decoration: none;
       border-bottom: 2px solid #ffffff;
-      transition: border-color 0.3s ease-in-out;
       padding: 0.5em 0;
     }
-
 
     .form-box {
       background-color: #161b22;
@@ -85,7 +83,26 @@
     h5 {
       color: #c9d1d9;
     }
+
+    #qrScanner {
+      width: clamp(300px, 75%, 600px);
+      align-self: center;
+      height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
   </style>
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@scandit/web-datacapture-core": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-core@7.3.0/build/js/index.js",
+        "@scandit/web-datacapture-barcode": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-barcode@7.3.0/build/js/index.js",
+        "@scandit/web-datacapture-barcode/": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-barcode@7.3.0/",
+        "@scandit/web-datacapture-core/": "https://cdn.jsdelivr.net/npm/@scandit/web-datacapture-core@7.3.0/"
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -115,16 +132,21 @@
   <div class="container mt-5">
     <div class="form-box">
       <form id="searchForm">
-        <div class="mb-3 d-flex align-items-center">
+        <div class="mb-3 d-flex">
           <div class="flex-grow-1 me-2">
             <label for="TicketID" class="form-label">Ticket #</label>
             <input type="text" class="form-control" id="TicketID" required>
           </div>
-          <button type="button" id="scanButton" class="btn btn-custom-blue mt-4">
-            <i class="fa-solid fa-camera"></i>
-          </button>
+          <div class="d-flex align-items-end mt-2">
+            <button type="button" id="scanButton" class="btn btn-custom-blue mt-2">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+          </div>
         </div>
-        <div id="qrScanner" style="display:none; margin-top:1em;"></div>
+
+        <div class="d-flex justify-content-center mb-3">
+          <div id="qrScanner" style="display:none; margin-top:1em;"></div>
+        </div>
         <button type="submit" id="SearchButton" class="btn btn-custom-blue w-100">Search</button>
       </form>
     </div>
@@ -139,69 +161,24 @@
     </div>
   </div>
 
-  <!-- Script for the barcode scanner. Barcode is in Code128 -->
-  <script>
+  <script type="module">
+    import { Scanner } from "./scanner.js";
+    import { Symbology } from "@scandit/web-datacapture-barcode";
     const scanButton = document.getElementById("scanButton");
     const qrScanner = document.getElementById("qrScanner");
-    let html5QrCode;
 
-    function getQrBoxConfig() {
-      const size = Math.floor(Math.min(window.innerWidth, window.innerHeight) * 0.6);
-      return { width: size, height: size };
-    }
-
-    let currentQrBoxConfig = getQrBoxConfig();
-
-    window.addEventListener("resize", () => {
-      currentQrBoxConfig = getQrBoxConfig();
-    });
-
-    scanButton.addEventListener("click", () => {
-      if (qrScanner.style.display === "none") {
-        qrScanner.style.display = "block";
-
-        if (!html5QrCode) {
-          html5QrCode = new Html5Qrcode("qrScanner");
-        }
-
-        html5QrCode.start(
-          { facingMode: "environment" }, // only facingMode, not width/height
-          {
-            fps: 15,
-            qrbox: () => currentQrBoxConfig,
-            formatsToSupport: [Html5QrcodeSupportedFormats.CODE_128],
-            experimentalFeatures: { useBarCodeDetectorIfSupported: true }
-          },
-          (decodedText) => {
-            document.getElementById("TicketID").value = decodedText;
-            html5QrCode.stop().then(() => {
-              qrScanner.style.display = "none";
-            });
-          },
-          (errorMessage) => {
-            // ignore scanning errors
-          }
-        ).catch(err => {
-          console.error("Camera start failed", err);
-        });
-
-
-      } else {
-        html5QrCode.stop().then(() => {
-          qrScanner.style.display = "none";
-        });
+    const scanner = new Scanner({
+      element: qrScanner,
+      licenseKey: "Apq207mBLf1mFnaCsc0YutUjhV8fE696PBrsRXzrvP3BXtFq/2W1hElR0u4XX6zF2AIV5hpSAOwEED4h3EAUrzpb2rdmdoYs1wXX1YZh953VX2pzwnN271QuyMN3QeMRn0jUvzFi6vU5GQGfvEgKUsJuV5niVvDebUsJ9lseowzTDdWcDR2dXRMrI1q2GabWkSW+1hbREH5WTNuI+h9utA2HwGdhJVzIm7LXYy0xoi4BtBUXd9V4S5VQP2JB/vl/ovUeR7xjyeLym4gaQf0lfKWA+0xRx8S+DeHs6d8wTnZ5Y/BAAKgLY6S8VUQSj24CvHfYHvhPy2D+bc8uvd68tmWIEm1uDipPJgpBcqzZM+92kXD3qtOFOam76aO1D8PiTTbKvHL2ohUhzte8lMPXs9LoisS4rvPLK41fIQufkE0fwSHFQ63ihhESYfbZ+yvBlQac7atPXhYsstQYhWlbJ7fO5RVcXpg0H9/i+a8CrvEk7XVFe6uLxs24MdcBp1NLXqR9BryxtRj/azyRiORdckw22LcdcbPlgyKiFhu6BVX2xHS+gB7vJkuHeaH4FLRg0BUyATgu+kn2qhVHjuqctihBdmHtPnSw3WFj0dMTJRJE0bio8rAT1zC3q+3qYpcxx7/WGR8QFgOClfGUCsO7xrhb77lxf9cMsn3J8pFaVDBQNNQgSKKDfSrM5b9DndXIGzBUYZE62bNxKF80I5IBibtORcc+OxOp1eNfwkPRy1hCrabzt6a++1A56yTQuV06ahJGr2VovZ+N5gAsKtt9fSfyOfmubPq0wnXEnZSSFaIraUe8OOVaawjGMfOWnzQM6uAH2xC0ibRzr9ghDWK9YsVJv+/0C8tHKNXuGcSD//c=",
+      symbologies: [Symbology.Code128, Symbology.QR],
+      onScan: (data) => {
+        document.getElementById("TicketID").value = data;
       }
     });
+
+    scanButton.addEventListener("click", () => scanner.init());
   </script>
 
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-  <script src="searchscripts.js"></script>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </body>
 
-
 </html>
-
