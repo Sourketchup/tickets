@@ -73,8 +73,8 @@ export class Scanner {
             this.resizeObserver = null;
         }
         if (this.view) {
-            this.view.removeFromElement();
             this.view = null;
+            this.barcodeCapture.setEnabled(false);
         }
         this.camera = null;
         this.barcodeCapture = null;
