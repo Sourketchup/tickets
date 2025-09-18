@@ -215,6 +215,7 @@
       symbologies: [Symbology.Code128, Symbology.QR],
       onScan: (data) => {
         document.getElementById("TicketID").value = data;
+        scanner.destroy();
       }
     });
 

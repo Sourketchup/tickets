@@ -286,6 +286,7 @@
       symbologies: [Symbology.Code128, Symbology.QR],
       onScan: (data) => {
         document.getElementById("studentticketNumber").value = data;
+        scanner.destroy();
       }
     });
 
@@ -302,6 +303,7 @@
       symbologies: [Symbology.Code128, Symbology.QR],
       onScan: (data) => {
         document.getElementById("guestTicketNumber").value = data;
+        guestScanner.destroy();
       }
     });
 
