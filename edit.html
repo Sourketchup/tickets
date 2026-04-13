@@ -140,7 +140,7 @@
   </nav>
 
   <div class="container mt-5">
-    <h2 class="text-center mb-4">Edit Ticket Information (THIS IS NOT DONE)</h2>
+    <h2 class="text-center mb-4">Edit Ticket Information</h2>
 
     <div class="form-box">
       <h4 class="mb-3">Search Ticket to Edit</h4>
@@ -214,7 +214,7 @@
       licenseKey: "Apq207mBLf1mFnaCsc0YutUjhV8fE696PBrsRXzrvP3BXtFq/2W1hElR0u4XX6zF2AIV5hpSAOwEED4h3EAUrzpb2rdmdoYs1wXX1YZh953VX2pzwnN271QuyMN3QeMRn0jUvzFi6vU5GQGfvEgKUsJuV5niVvDebUsJ9lseowzTDdWcDR2dXRMrI1q2GabWkSW+1hbREH5WTNuI+h9utA2HwGdhJVzIm7LXYy0xoi4BtBUXd9V4S5VQP2JB/vl/ovUeR7xjyeLym4gaQf0lfKWA+0xRx8S+DeHs6d8wTnZ5Y/BAAKgLY6S8VUQSj24CvHfYHvhPy2D+bc8uvd68tmWIEm1uDipPJgpBcqzZM+92kXD3qtOFOam76aO1D8PiTTbKvHL2ohUhzte8lMPXs9LoisS4rvPLK41fIQufkE0fwSHFQ63ihhESYfbZ+yvBlQac7atPXhYsstQYhWlbJ7fO5RVcXpg0H9/i+a8CrvEk7XVFe6uLxs24MdcBp1NLXqR9BryxtRj/azyRiORdckw22LcdcbPlgyKiFhu6BVX2xHS+gB7vJkuHeaH4FLRg0BUyATgu+kn2qhVHjuqctihBdmHtPnSw3WFj0dMTJRJE0bio8rAT1zC3q+3qYpcxx7/WGR8QFgOClfGUCsO7xrhb77lxf9cMsn3J8pFaVDBQNNQgSKKDfSrM5b9DndXIGzBUYZE62bNxKF80I5IBibtORcc+OxOp1eNfwkPRy1hCrabzt6a++1A56yTQuV06ahJGr2VovZ+N5gAsKtt9fSfyOfmubPq0wnXEnZSSFaIraUe8OOVaawjGMfOWnzQM6uAH2xC0ibRzr9ghDWK9YsVJv+/0C8tHKNXuGcSD//c=",
       symbologies: [Symbology.Code128, Symbology.QR],
       onScan: (data) => {
-        document.getElementById("TicketID").value = data;
+        document.getElementById("ticketSearch").value = data;
         scanner.destroy();
       }
     });
