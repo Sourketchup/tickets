@@ -124,7 +124,6 @@ $(document).ready(function () {
     }
 
     const payload = {
-      ID: updatedId,
       Ticket_Type: type,
       Inviter: type === 'Guest' ? inviter.val().trim() : 'NONE',
       Owner: type === 'Guest' ? guestName.val().trim().toUpperCase() : studentName.val().trim().toUpperCase(),
@@ -172,4 +171,4 @@ $(document).ready(function () {
     toggleFields($(this).val());
   });
 });
-  
+
