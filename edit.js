@@ -25,6 +25,7 @@ $(document).ready(function () {
   const guestName = $('#guestName');
   const guestGrade = $('#guestGrade');
   const inviter = $('#inviter');
+  const resolvedInviterName = $('#resolvedInviterName');
   const ticketNumber = $('#ticketNumber');
 
   let currentTicketId = null;
@@ -52,10 +53,41 @@ $(document).ready(function () {
     } else {
       studentFields.removeClass('hidden');
       guestFields.addClass('hidden');
+      resolvedInviterName.text('No inviter loaded.');
     }
   }
 
-  function populateForm(data) {
+  async function resolveInviterName(inviterId) {
+    const trimmedInviterId = (inviterId || '').trim();
+
+    if (!trimmedInviterId) {
+      resolvedInviterName.text('No inviter loaded.');
+      return;
+    }
+
+    resolvedInviterName.text('Loading inviter name...');
+
+    try {
+      const response = await fetch(`${apiBase}/students/${trimmedInviterId}`);
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        resolvedInviterName.text('Unable to resolve inviter.');
+        return;
+      }
+
+      const firstName = data?.StudentFirstName || '';
+      const lastName = data?.StudentLastName || '';
+      const fullName = `${firstName} ${lastName}`.trim();
+
+      resolvedInviterName.text(fullName || 'Unable to resolve inviter.');
+    } catch (error) {
+      console.error('Inviter lookup error:', error);
+      resolvedInviterName.text('Unable to resolve inviter.');
+    }
+  }
+
+  async function populateForm(data) {
     const normalizedType = (data.Ticket_Type || '').toLowerCase();
     const resolvedType = normalizedType === 'guest' ? 'Guest' : 'Student';
 
@@ -75,6 +107,7 @@ $(document).ready(function () {
       guestName.val(data.Owner || '');
       guestGrade.val(data.GradeLevel || '');
       inviter.val(data.Inviter || '');
+      await resolveInviterName(data.Inviter || '');
     } else {
       studentName.val(data.Owner || '');
     }
@@ -98,7 +131,7 @@ $(document).ready(function () {
         return;
       }
 
-      populateForm(data);
+      await populateForm(data);
       showInfo('Ticket found!');
     } catch (error) {
       console.error('Search error:', error);
@@ -170,5 +203,9 @@ $(document).ready(function () {
   ticketType.on('change', function () {
     toggleFields($(this).val());
   });
+  inviter.on('blur', function () {
+    if (ticketType.val() === 'Guest') {
+      resolveInviterName($(this).val());
+    }
+  });
 });
-
