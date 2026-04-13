@@ -107,7 +107,8 @@
       border: 1px solid #30363d;
       border-radius: 8px;
       color: #c9d1d9;
-      padding: 12px 14px;
+      padding: 0.5em;
+
     }
   </style>
   <script type="importmap">
@@ -192,16 +193,16 @@
             <label for="guestName" class="form-label">Guest Name:</label>
             <input type="text" class="form-control" id="guestName">
           </div>
-          <div class="mb-3">
+          <div class="mb-2">
             <label for="guestGrade" class="form-label">Guest Grade:</label>
             <input type="text" class="form-control" id="guestGrade">
           </div>
           <div class="mb-3">
-            <label class="form-label">Resolved Inviter:</label>
-            <div id="resolvedInviterName" class="resolved-inviter">No inviter loaded.</div>
-          </div>
-          <div class="mb-3">
-            <label for="inviter" class="form-label">Inviter:</label>
+            <div class="d-flex gap-2 mb-2 align-items-end"> <label for="inviter" class="form-label">Inviter:</label>
+              <div id="resolvedInviterName" class="resolved-inviter">
+                Unknown</div>
+            </div>
+
             <input type="text" class="form-control" id="inviter">
           </div>
         </div>
