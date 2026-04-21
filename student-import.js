@@ -7,10 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const previewButton = document.getElementById('previewButton');
   const importButton = document.getElementById('importButton');
   const downloadSampleButton = document.getElementById('downloadSampleButton');
+  const refreshStudentsButton = document.getElementById('refreshStudentsButton');
   const previewTableBody = document.getElementById('previewTableBody');
+  const existingStudentsTableBody = document.getElementById('existingStudentsTableBody');
   const rowCount = document.getElementById('rowCount');
   const validCount = document.getElementById('validCount');
   const invalidCount = document.getElementById('invalidCount');
+  const existingCount = document.getElementById('existingCount');
+  const duplicateCount = document.getElementById('duplicateCount');
 
   const notyf = new Notyf({
     types: [
@@ -28,6 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   let parsedRows = [];
+  let existingStudents = [];
+  let existingStudentIds = new Set();
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
   function showInfo(message) {
     notyf.open({
@@ -119,6 +134,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function normalizeExistingStudent(entry) {
+    const normalizedRecord = {};
+
+    Object.entries(entry || {}).forEach(([key, value]) => {
+      normalizedRecord[normalizeHeader(key)] = value;
+    });
+
+    const studentNumber = findValue(normalizedRecord, ['studentid', 'studentnumber', 'id']);
+    const firstName = findValue(normalizedRecord, ['studentfirstname', 'firstname', 'first']);
+    const lastName = findValue(normalizedRecord, ['studentlastname', 'lastname', 'last']);
+    const timeAdded = findValue(normalizedRecord, ['timeadded']);
+
+    return {
+      studentNumber,
+      firstName,
+      lastName,
+      timeAdded
+    };
+  }
+
+  function applyDuplicateValidation(rows) {
+    const csvStudentIds = new Map();
+
+    rows.forEach((row) => {
+      if (row.studentNumber) {
+        csvStudentIds.set(row.studentNumber, (csvStudentIds.get(row.studentNumber) || 0) + 1);
+      }
+    });
+
+    rows.forEach((row) => {
+      const baseErrors = row.errors.filter((error) => error !== 'Student already exists' && error !== 'Duplicate StudentID in CSV');
+
+      if (row.studentNumber && existingStudentIds.has(row.studentNumber)) {
+        baseErrors.push('Student already exists');
+      }
+
+      if (row.studentNumber && (csvStudentIds.get(row.studentNumber) || 0) > 1) {
+        baseErrors.push('Duplicate StudentID in CSV');
+      }
+
+      row.errors = baseErrors;
+      row.valid = row.errors.length === 0;
+    });
+  }
+
   function toStudentRow(parsedEntry) {
     const record = parsedEntry.record;
     const studentNumber = findValue(record, ['studentid']);
@@ -140,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
       errors.push('Missing StudentLastName');
     }
 
-    return {
+    const row = {
       csvRow: parsedEntry.csvRow,
       studentNumber,
       firstName,
@@ -149,23 +209,15 @@ document.addEventListener('DOMContentLoaded', () => {
       valid: errors.length === 0,
       errors
     };
+
+    return row;
   }
 
   function renderTable(rows) {
     if (!rows.length) {
-      previewTableBody.innerHTML = '<tr><td colspan="5" class="text-center text-secondary py-4">No CSV loaded yet.</td></tr>';
+      previewTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-secondary py-4">No CSV loaded yet.</td></tr>';
       return;
     }
-
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
     previewTableBody.innerHTML = rows.map((row, index) => {
       const statusClass = row.valid ? 'text-success' : 'text-danger';
       const statusText = escapeHtml(row.valid ? 'Ready' : row.errors.join(', '));
@@ -180,16 +232,84 @@ document.addEventListener('DOMContentLoaded', () => {
           <td>${fullName}</td>
           <td>${timeAdded}</td>
           <td class="${statusClass}">${statusText}</td>
+          <td class="text-end">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-preview-row" data-row-index="${index}">
+              <i class="fa-solid fa-trash"></i> Remove
+            </button>
+          </td>
         </tr>
       `;
     }).join('');
+  }
+
+  function renderExistingStudentsTable(rows) {
+    if (!rows.length) {
+      existingStudentsTableBody.innerHTML = '<tr><td colspan="4" class="text-center text-secondary py-4">No students returned from /students/list.</td></tr>';
+      return;
+    }
+
+    existingStudentsTableBody.innerHTML = rows.map((row) => `
+      <tr>
+        <td>${escapeHtml(row.studentNumber || 'N/A')}</td>
+        <td>${escapeHtml(row.lastName || 'N/A')}</td>
+        <td>${escapeHtml(row.firstName || 'N/A')}</td>
+        <td>${escapeHtml(row.timeAdded || 'N/A')}</td>
+      </tr>
+    `).join('');
   }
 
   function updateSummary(rows) {
     rowCount.textContent = rows.length;
     validCount.textContent = rows.filter((row) => row.valid).length;
     invalidCount.textContent = rows.filter((row) => !row.valid).length;
+    duplicateCount.textContent = rows.filter((row) => row.errors.includes('Student already exists') || row.errors.includes('Duplicate StudentID in CSV')).length;
     importButton.disabled = !rows.some((row) => row.valid);
+  }
+
+  function updateExistingSummary(rows) {
+    existingCount.textContent = rows.length;
+  }
+
+  async function loadExistingStudents() {
+    existingStudentsTableBody.innerHTML = '<tr><td colspan="4" class="text-center text-secondary py-4">Loading student list...</td></tr>';
+
+    try {
+      const response = await fetch(`${apiBase}/students/list`);
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(data?.error || 'Unable to load students list.');
+      }
+
+      const rawList = Array.isArray(data) ? data : Array.isArray(data?.students) ? data.students : Array.isArray(data?.data) ? data.data : [];
+      existingStudents = rawList
+        .map(normalizeExistingStudent)
+        .filter((student) => student.studentNumber);
+
+      existingStudentIds = new Set(existingStudents.map((student) => student.studentNumber));
+      renderExistingStudentsTable(existingStudents);
+      updateExistingSummary(existingStudents);
+
+      if (parsedRows.length) {
+        applyDuplicateValidation(parsedRows);
+        renderTable(parsedRows);
+        updateSummary(parsedRows);
+      }
+    } catch (error) {
+      console.error('Student list error:', error);
+      existingStudents = [];
+      existingStudentIds = new Set();
+      existingStudentsTableBody.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">Could not load /students/list.</td></tr>';
+      updateExistingSummary(existingStudents);
+
+      if (parsedRows.length) {
+        applyDuplicateValidation(parsedRows);
+        renderTable(parsedRows);
+        updateSummary(parsedRows);
+      }
+
+      showError('Could not load existing students list.');
+    }
   }
 
   async function readCsvSource() {
@@ -221,10 +341,22 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    applyDuplicateValidation(parsed);
     parsedRows = parsed;
     renderTable(parsedRows);
     updateSummary(parsedRows);
     showInfo('CSV preview loaded.');
+  }
+
+  function removePreviewRow(index) {
+    if (index < 0 || index >= parsedRows.length) {
+      return;
+    }
+
+    parsedRows.splice(index, 1);
+    applyDuplicateValidation(parsedRows);
+    renderTable(parsedRows);
+    updateSummary(parsedRows);
   }
 
   async function importStudents() {
@@ -266,6 +398,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         successCount += 1;
+        row.valid = false;
+        row.errors = ['Imported'];
       } catch (error) {
         console.error('Import error:', error);
         failureCount += 1;
@@ -277,6 +411,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTable(parsedRows);
     updateSummary(parsedRows);
     importButton.textContent = 'Import Students';
+
+    if (successCount) {
+      await loadExistingStudents();
+    }
 
     if (successCount) {
       showInfo(`Imported ${successCount} student${successCount === 1 ? '' : 's'}.`);
@@ -306,4 +444,17 @@ document.addEventListener('DOMContentLoaded', () => {
   previewButton.addEventListener('click', previewCsv);
   importButton.addEventListener('click', importStudents);
   downloadSampleButton.addEventListener('click', downloadSampleCsv);
+  refreshStudentsButton.addEventListener('click', loadExistingStudents);
+  previewTableBody.addEventListener('click', (event) => {
+    const button = event.target.closest('.remove-preview-row');
+
+    if (!button) {
+      return;
+    }
+
+    const rowIndex = Number(button.dataset.rowIndex);
+    removePreviewRow(rowIndex);
+  });
+
+  loadExistingStudents();
 });

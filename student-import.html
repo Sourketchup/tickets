@@ -96,6 +96,15 @@
       padding: 0.45rem 0.8rem;
     }
 
+    .section-title {
+      color: #c9d1d9;
+      margin-bottom: 1rem;
+    }
+
+    .wide-page {
+      max-width: 1600px;
+    }
+
     code {
       color: #79c0ff;
     }
@@ -127,7 +136,7 @@
     </div>
   </nav>
 
-  <div class="container mt-5">
+  <div class="container wide-page mt-5">
     <div class="form-box">
       <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
         <div>
@@ -159,7 +168,9 @@
             <button type="button" id="importButton" class="btn btn-success" disabled>Import Students</button>
           </div>
           <div class="mt-3">
-            <div class="summary-chip">Required: <code>StudentID</code>, <code>StudentLastName</code>, <code>StudentFirstName</code></div>
+            <div class="summary-chip">Required: <code>StudentID</code>, <code>StudentLastName</code>,
+              <code>StudentFirstName</code>
+            </div>
             <div class="summary-chip">Optional: <code>Time_Added</code></div>
           </div>
         </div>
@@ -180,16 +191,53 @@
                   <th scope="col">Name</th>
                   <th scope="col">Time Added</th>
                   <th scope="col">Status</th>
+                  <th scope="col" class="text-end">Action</th>
                 </tr>
               </thead>
               <tbody id="previewTableBody">
                 <tr>
-                  <td colspan="5" class="text-center text-secondary py-4">No CSV loaded yet.</td>
+                  <td colspan="6" class="text-center text-secondary py-4">No CSV loaded yet.</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="form-box">
+      <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+        <div>
+          <h4 class="section-title mb-1">Existing Students</h4>
+        </div>
+        <div class="align-self-start">
+          <button type="button" id="refreshStudentsButton" class="btn btn-custom-blue">
+            <i class="fa-solid fa-rotate"></i> Refresh List
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <div class="summary-chip">Existing students: <span id="existingCount" class="ms-2">0</span></div>
+        <div class="summary-chip">Duplicate matches: <span id="duplicateCount" class="ms-2">0</span></div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-dark table-striped align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Student #</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Time Added</th>
+            </tr>
+          </thead>
+          <tbody id="existingStudentsTableBody">
+            <tr>
+              <td colspan="4" class="text-center text-secondary py-4">Loading student list...</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
