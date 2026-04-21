@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Import Students</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #0d1117;
+      color: #e6edf3;
+    }
+
+    .navbar {
+      background-color: rgba(31, 111, 235, 0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar-brand,
+    .nav-link {
+      color: #ffffff !important;
+      font-weight: 500;
+    }
+
+    .nav-link.active {
+      text-decoration: none;
+      border-bottom: 2px solid #ffffff;
+      transition: border-color 0.3s ease-in-out;
+      padding: 0.5em 0;
+    }
+
+    .form-box {
+      background-color: #161b22;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2em;
+    }
+
+    .form-control,
+    .form-control:focus {
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      color: #e6edf3;
+      box-shadow: none;
+    }
+
+    .form-control:focus {
+      border-color: #1f6feb;
+    }
+
+    .btn-custom-blue {
+      background-color: #1f6feb;
+      color: white;
+      border: none;
+    }
+
+    .btn-custom-blue:hover {
+      background-color: #0c4eb1;
+    }
+
+    .btn-success {
+      background-color: #2ea043;
+      border: none;
+    }
+
+    .btn-success:hover {
+      filter: brightness(1.1);
+    }
+
+    .table-dark {
+      --bs-table-bg: #0d1117;
+      --bs-table-striped-bg: #161b22;
+      --bs-table-hover-bg: #1c2128;
+      --bs-table-border-color: #30363d;
+    }
+
+    .helper-text {
+      color: #8b949e;
+      font-size: 0.95rem;
+    }
+
+    .summary-chip {
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 999px;
+      display: inline-flex;
+      margin-right: 0.5rem;
+      padding: 0.45rem 0.8rem;
+    }
+
+    code {
+      color: #79c0ff;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html"><i class="fa-solid fa-ticket"></i> Homecoming Tickets</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa-solid fa-plus"></i> Add Tickets</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="search.html"><i class="fa-solid fa-magnifying-glass"></i>
+              Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="edit.html"><i class="fa-solid fa-pen"></i> Edit Info</a></li>
+          <li class="nav-item"><a class="nav-link" href="instructions.html"><i class="fa-solid fa-info-circle"></i>
+              Instructions</a></li>
+          <li class="nav-item"><a class="nav-link" href="manual-add.html"><i class="fa-solid fa-keyboard"></i> Manual
+              Add</a></li>
+          <li class="nav-item"><a class="nav-link active" href="student-import.html"><i
+                class="fa-solid fa-file-import"></i> Import Students</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <div class="form-box">
+      <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-3">
+        <div>
+          <h2 class="mb-2">Import Students by CSV</h2>
+          <p class="helper-text mb-0">
+            Upload a roster CSV with headers <code>StudentID,StudentLastName,StudentFirstName,Time_Added</code>.
+          </p>
+        </div>
+        <div class="align-self-start">
+          <button type="button" id="downloadSampleButton" class="btn btn-custom-blue">
+            <i class="fa-solid fa-download"></i> Sample CSV
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <div class="mb-3">
+            <label for="csvFile" class="form-label">CSV File</label>
+            <input type="file" class="form-control" id="csvFile" accept=".csv,text/csv">
+          </div>
+          <div class="mb-3">
+            <label for="csvText" class="form-label">Or paste CSV</label>
+            <textarea class="form-control" id="csvText" rows="10"
+              placeholder="StudentID,StudentLastName,StudentFirstName,Time_Added&#10;12345,Doe,Jane,1713571200"></textarea>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="button" id="previewButton" class="btn btn-custom-blue">Preview CSV</button>
+            <button type="button" id="importButton" class="btn btn-success" disabled>Import Students</button>
+          </div>
+          <div class="mt-3">
+            <div class="summary-chip">Required: <code>StudentID</code>, <code>StudentLastName</code>, <code>StudentFirstName</code></div>
+            <div class="summary-chip">Optional: <code>Time_Added</code></div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <div class="summary-chip">Rows: <span id="rowCount" class="ms-2">0</span></div>
+            <div class="summary-chip">Ready: <span id="validCount" class="ms-2">0</span></div>
+            <div class="summary-chip">Issues: <span id="invalidCount" class="ms-2">0</span></div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Student #</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Time Added</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="previewTableBody">
+                <tr>
+                  <td colspan="5" class="text-center text-secondary py-4">No CSV loaded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  <script src="student-import.js"></script>
+</body>
+
+</html>
