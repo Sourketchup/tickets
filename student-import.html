@@ -108,6 +108,12 @@
     code {
       color: #79c0ff;
     }
+
+    #csvText::placeholder {
+      color: white;
+      opacity: 1;
+    }
+    
   </style>
 </head>
 
@@ -160,10 +166,8 @@
           </div>
           <div class="mb-3">
             <label for="csvText" class="form-label">Or paste CSV</label>
-            <div ::placeholder { color: red; opacity: 1; }>
-            <textarea class="form-control" id="csvText" rows="10" style="color:white"
+            <textarea class="form-control" id="csvText" rows="10" 
               placeholder="StudentID,StudentLastName,StudentFirstName,Time_Added&#10;12345,Doe,Jane,1713571200"></textarea>
-            </div>
           </div>
           <div class="d-grid gap-2">
             <button type="button" id="previewButton" class="btn btn-custom-blue">Preview CSV</button>
